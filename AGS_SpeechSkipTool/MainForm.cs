@@ -29,9 +29,12 @@ namespace AGS_SpeechSkipTool
     {
       if (File.Exists(tbGameFolder.Text))
       {
-        bool result = patcher.Patch(tbGameFolder.Text, (SpeechSkipType)cbSpeechSkipType.SelectedItem);
+        bool result = patcher.Patch(tbGameFolder.Text, (SpeechSkipType)cbSpeechSkipType.SelectedItem, cbMakeBackup.Checked);
         if (result)
         {
+          if (cbMakeBackup.Checked)
+            cbMakeBackup.Checked = false;
+
           MessageBox.Show(this, "Game was successfully patched!",
             "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }

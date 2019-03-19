@@ -34,6 +34,7 @@
       this.lblSpeechSkipType = new System.Windows.Forms.Label();
       this.tbGameFolder = new System.Windows.Forms.TextBox();
       this.btnPatch = new System.Windows.Forms.Button();
+      this.cbMakeBackup = new System.Windows.Forms.CheckBox();
       this.SuspendLayout();
       // 
       // btnSelectGameFolder
@@ -60,9 +61,9 @@
       this.lblGameFolder.AutoSize = true;
       this.lblGameFolder.Location = new System.Drawing.Point(12, 9);
       this.lblGameFolder.Name = "lblGameFolder";
-      this.lblGameFolder.Size = new System.Drawing.Size(67, 13);
+      this.lblGameFolder.Size = new System.Drawing.Size(62, 13);
       this.lblGameFolder.TabIndex = 2;
-      this.lblGameFolder.Text = "Game folder:";
+      this.lblGameFolder.Text = "Game path:";
       this.lblGameFolder.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
       // 
       // lblSpeechSkipType
@@ -92,22 +93,35 @@
       this.btnPatch.UseVisualStyleBackColor = true;
       this.btnPatch.Click += new System.EventHandler(this.btnPatch_Click);
       // 
+      // cbMakeBackup
+      // 
+      this.cbMakeBackup.AutoSize = true;
+      this.cbMakeBackup.Checked = true;
+      this.cbMakeBackup.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.cbMakeBackup.Location = new System.Drawing.Point(15, 120);
+      this.cbMakeBackup.Name = "cbMakeBackup";
+      this.cbMakeBackup.Size = new System.Drawing.Size(84, 17);
+      this.cbMakeBackup.TabIndex = 7;
+      this.cbMakeBackup.Text = "Backup files";
+      this.cbMakeBackup.UseVisualStyleBackColor = true;
+      // 
       // MainForm
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(266, 151);
+      this.Controls.Add(this.cbMakeBackup);
       this.Controls.Add(this.btnPatch);
       this.Controls.Add(this.tbGameFolder);
       this.Controls.Add(this.lblSpeechSkipType);
       this.Controls.Add(this.lblGameFolder);
       this.Controls.Add(this.cbSpeechSkipType);
       this.Controls.Add(this.btnSelectGameFolder);
-      this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+      this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
       this.MaximizeBox = false;
       this.Name = "MainForm";
       this.ShowIcon = false;
-      this.Text = "AGS Speech Skip Tool";
+      this.Text = "AGS SpeechSkipTool";
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -121,6 +135,7 @@
     private System.Windows.Forms.Label lblSpeechSkipType;
     private System.Windows.Forms.TextBox tbGameFolder;
     private System.Windows.Forms.Button btnPatch;
+    private System.Windows.Forms.CheckBox cbMakeBackup;
   }
 }
 

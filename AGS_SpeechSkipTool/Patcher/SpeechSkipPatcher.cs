@@ -11,6 +11,7 @@ namespace AGS_SpeechSkipTool.Patcher
   {
     private static readonly string GameDataV3Filename = "game28.dta";
     private static readonly string ACV3Filename = "acwin.exe";
+    private static readonly string BackupFolder = "Backup";
 
     private static readonly string CLIBSignatureHead = "CLIB\x1a";
     private static readonly string CLIBSignatureTail = "CLIB\x1\x2\x3\x4SIGE";
@@ -32,21 +33,49 @@ namespace AGS_SpeechSkipTool.Patcher
       return (value >= lower) && (value < upper);
     }
 
-    public bool Patch(string filepath, SpeechSkipType speechSkipType)
+    public bool Patch(string filepath, SpeechSkipType speechSkipType, bool makeBackup)
     {
       IEnumerable<Asset> dtaFiles = BuildDTAAssetList(filepath);
       foreach (Asset asset in dtaFiles)
       {
-        PatchSpeechSkipType(asset.Filename, asset.Offset, speechSkipType);
+        if (makeBackup && !CreateBackup(asset.Filepath))
+          return false;
+
+        PatchSpeechSkipType(asset.Filepath, asset.Offset, speechSkipType);
       }
 
       IEnumerable<Asset> acFiles = BuildACAssetList(filepath);
       foreach (Asset asset in acFiles)
       {
-        PatchSetSkipSpeechFunction(asset.Filename);
+        if (makeBackup && !CreateBackup(asset.Filepath))
+          return false;
+
+        PatchSetSkipSpeechFunction(asset.Filepath);
       }
 
       return true;
+    }
+
+    private bool CreateBackup(string filepath)
+    {
+      try
+      {
+        string sourceFolder = Path.GetDirectoryName(filepath);
+        string sourceFilename = Path.GetFileName(filepath);
+
+        string destinationFolder = Path.Combine(sourceFolder, BackupFolder);
+        string destinationPath = Path.Combine(destinationFolder, sourceFilename);
+
+        if (!Directory.Exists(destinationFolder))
+          Directory.CreateDirectory(destinationFolder);
+
+        File.Copy(filepath, destinationPath, true);
+        return true;
+      }
+      catch
+      {
+        return false;
+      }
     }
 
     private bool PatchSetSkipSpeechFunction(string filepath)
@@ -231,7 +260,7 @@ namespace AGS_SpeechSkipTool.Patcher
       IEnumerable<Asset> clibAssets = ParseCLIBAssets(filepath, offset);
       foreach (Asset asset in clibAssets)
       {
-        if (asset.Filename == GameDataV3Filename)
+        if (asset.Filepath == GameDataV3Filename)
           return new Asset(filepath, asset.Offset, asset.Size);
       }
 
