@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace AGS_SpeechSkipTool
+namespace AGS_SpeechSkipTool.Extension
 {
   public static class BinaryReaderExtension
   {
