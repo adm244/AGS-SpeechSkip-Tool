@@ -15,6 +15,9 @@ namespace AGS_SpeechSkipTool
     private static readonly int SpeechSkipOptionIndex = 7;
     private static readonly Encoding Windows1251 = Encoding.GetEncoding(1251);
 
+    private long _speechSkipOptionOffset = -1;
+    private long _setSpeechSkipOffset = -1;
+
     public bool Patch(string filename, SpeechSkipType speechSkipType)
     {
       bool result = PatchExecutable(filename, speechSkipType);
@@ -26,7 +29,39 @@ namespace AGS_SpeechSkipTool
 
     private bool PatchExecutable(string filename, SpeechSkipType speechSkipType)
     {
-      using (FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.ReadWrite))
+      if (!IsValidExecutable(filename))
+        return false;
+
+      //MakeBackupFile(filename);
+
+      if (!WriteChanges(filename, speechSkipType))
+        return false;
+
+      return true;
+    }
+
+    private bool WriteChanges(string filename, SpeechSkipType speechSkipType)
+    {
+      using (FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Write))
+      {
+        using (BinaryWriter w = new BinaryWriter(fs, Windows1251))
+        {
+          bool result = WriteSpeechSkipType(w, _speechSkipOptionOffset, speechSkipType);
+          if (result == false)
+            return false;
+
+          result = DisableSetSpeechSkipFunction(w, _setSpeechSkipOffset);
+          if (result == false)
+            return false;
+        }
+      }
+
+      return true;
+    }
+
+    private bool IsValidExecutable(string filename)
+    {
+      using (FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Read))
       {
         using (BinaryReader r = new BinaryReader(fs, Windows1251))
         {
@@ -40,28 +75,15 @@ namespace AGS_SpeechSkipTool
           if (!IsValidDTAFile(r, dtaOffset))
             return false;
 
-          long speechSkipOffset = GetSpeechSkipOffset(r);
-          if (speechSkipOffset < 0)
+          _speechSkipOptionOffset = GetSpeechSkipOffset(r);
+          if (_speechSkipOptionOffset < 0)
             return false;
 
-          long setSpeechSkipOffset = GetOffsetOf(r, SetSpeechSkipSignature);
-          if (setSpeechSkipOffset < 0)
+          _setSpeechSkipOffset = GetOffsetOf(r, SetSpeechSkipSignature);
+          if (_setSpeechSkipOffset < 0)
           {
-            setSpeechSkipOffset = GetOffsetOf(r, SetSpeechSkipPatchedSignature);
-            if (setSpeechSkipOffset < 0)
-              return false;
-          }
-
-          //MakeBackupFile(filename);
-
-          using (BinaryWriter w = new BinaryWriter(fs, Windows1251))
-          {
-            bool result = WriteSpeechSkipType(w, speechSkipOffset, speechSkipType);
-            if (result == false)
-              return false;
-
-            result = DisableSetSpeechSkipFunction(w, setSpeechSkipOffset);
-            if (result == false)
+            _setSpeechSkipOffset = GetOffsetOf(r, SetSpeechSkipPatchedSignature);
+            if (_setSpeechSkipOffset < 0)
               return false;
           }
         }
