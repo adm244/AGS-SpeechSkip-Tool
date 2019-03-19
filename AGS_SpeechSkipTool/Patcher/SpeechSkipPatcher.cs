@@ -28,11 +28,6 @@ namespace AGS_SpeechSkipTool.Patcher
     private static readonly int SpeechSkipOptionIndex = 7;
     private static readonly Encoding Windows1251 = Encoding.GetEncoding(1251);
 
-    private bool IsInRange(int value, int lower, int upper)
-    {
-      return (value >= lower) && (value < upper);
-    }
-
     public bool Patch(string filepath, SpeechSkipType speechSkipType, bool makeBackup)
     {
       IEnumerable<Asset> dtaFiles = BuildDTAAssetList(filepath);
