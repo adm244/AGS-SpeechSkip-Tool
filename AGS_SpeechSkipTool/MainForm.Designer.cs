@@ -1,4 +1,5 @@
-﻿namespace AGS_SpeechSkipTool
+﻿using AGS_SpeechSkipTool.Properties;
+namespace AGS_SpeechSkipTool
 {
   partial class MainForm
   {
@@ -28,6 +29,8 @@
     /// </summary>
     private void InitializeComponent()
     {
+      this.Icon = Resources.cup_icon;
+
       this.btnSelectGameFolder = new System.Windows.Forms.Button();
       this.cbSpeechSkipType = new System.Windows.Forms.ComboBox();
       this.lblGameFolder = new System.Windows.Forms.Label();
@@ -120,7 +123,6 @@
       this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
       this.MaximizeBox = false;
       this.Name = "MainForm";
-      this.ShowIcon = false;
       this.Text = "AGS SpeechSkipTool";
       this.ResumeLayout(false);
       this.PerformLayout();
