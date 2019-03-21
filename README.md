@@ -1,9 +1,9 @@
 # AGS SpeechSkip Tool
 This program allows you to change a way speech lines in AGS games can be skipped.
 
-Are you're tired of not being able to read subtitles in time or, perhaps,
+Are you tired of not being able to read subtitles in time or, perhaps,
 you don't want to keep pressing buttons to get to the next speech line?
-Maybe you hate skipping dialogs accidentally when your cat jumps on the keyboard out of nowhere?
+Maybe you hate skipping dialogs accidentally as your cat jumps on the keyboard out of nowhere?
 Well, worry no more! Or do. Either way, this program might help you. Or it might not.
 
 ### Compilation
