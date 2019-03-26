@@ -58,6 +58,14 @@ namespace AGS_SpeechSkipTool.Patcher
 
     public event Func<PatcherEventType, PatcherEventData, bool> OnPatcherEvent = null;
 
+    private Nullable<bool> RaisePatcherEvent(PatcherEventType type, PatcherEventData data)
+    {
+      if (OnPatcherEvent == null)
+        return null;
+
+      return OnPatcherEvent(type, data);
+    }
+
     public bool Patch(string filepath, SpeechSkipType speechSkipType, bool makeBackup)
     {
       IEnumerable<Asset> dtaFiles = BuildDTAAssetList(filepath);
@@ -244,8 +252,8 @@ namespace AGS_SpeechSkipTool.Patcher
           }
           else if ((dtaVersion < DTAVersionMin) || (dtaVersion > DTAVersionMax))
           {
-            bool result = OnPatcherEvent(PatcherEventType.UnsupportedDTA, new PatcherEventData(dtaVersion));
-            if (result == false)
+            Nullable<bool> result = RaisePatcherEvent(PatcherEventType.UnsupportedDTA, new PatcherEventData(dtaVersion));
+            if ((result != null) && (result == false))
               return -1;
           }
 
