@@ -51,7 +51,7 @@ namespace AGS_SpeechSkipTool.Patcher
     private static readonly byte[] OpCodeReturn = new byte[] { 0xC3 };
 
     private static readonly int SpeechSkipOptionIndex = 7;
-    private static readonly Encoding Windows1251 = Encoding.GetEncoding(1251);
+    private static readonly Encoding Windows1252 = Encoding.GetEncoding(1252);
 
     public bool Patch(string filepath, SpeechSkipType speechSkipType, bool makeBackup)
     {
@@ -111,7 +111,7 @@ namespace AGS_SpeechSkipTool.Patcher
     {
       using (FileStream file = new FileStream(filepath, FileMode.Open, FileAccess.Write))
       {
-        using (BinaryWriter writer = new BinaryWriter(file, Windows1251))
+        using (BinaryWriter writer = new BinaryWriter(file, Windows1252))
         {
           long position = writer.BaseStream.Seek(offset, SeekOrigin.Begin);
           if (position != offset)
@@ -142,7 +142,7 @@ namespace AGS_SpeechSkipTool.Patcher
     {
       using (FileStream file = new FileStream(filepath, FileMode.Open, FileAccess.Read))
       {
-        using (BinaryReader reader = new BinaryReader(file, Windows1251))
+        using (BinaryReader reader = new BinaryReader(file, Windows1252))
         {
           reader.BaseStream.Seek(0, SeekOrigin.Begin);
           byte[] buffer = reader.ReadBytes((int)reader.BaseStream.Length);
@@ -206,7 +206,7 @@ namespace AGS_SpeechSkipTool.Patcher
     {
       using (FileStream file = new FileStream(filename, FileMode.Open, FileAccess.Write))
       {
-        using (BinaryWriter writer = new BinaryWriter(file, Windows1251))
+        using (BinaryWriter writer = new BinaryWriter(file, Windows1252))
         {
           long position = writer.BaseStream.Seek(offset, SeekOrigin.Begin);
           if (position != offset)
@@ -223,7 +223,7 @@ namespace AGS_SpeechSkipTool.Patcher
     {
       using (FileStream file = new FileStream(filepath, FileMode.Open, FileAccess.Read))
       {
-        using (BinaryReader reader = new BinaryReader(file, Windows1251))
+        using (BinaryReader reader = new BinaryReader(file, Windows1252))
         {
           reader.BaseStream.Seek(offset, SeekOrigin.Begin);
 
@@ -291,7 +291,7 @@ namespace AGS_SpeechSkipTool.Patcher
     {
       using (FileStream file = new FileStream(filepath, FileMode.Open, FileAccess.Read))
       {
-        using (BinaryReader reader = new BinaryReader(file, Windows1251))
+        using (BinaryReader reader = new BinaryReader(file, Windows1252))
         {
           reader.BaseStream.Seek(-(CLIBSignatureTail.Length + sizeof(Int32)), SeekOrigin.End);
 
@@ -309,7 +309,7 @@ namespace AGS_SpeechSkipTool.Patcher
     {
       using (FileStream file = new FileStream(filepath, FileMode.Open, FileAccess.Read))
       {
-        using (BinaryReader reader = new BinaryReader(file, Windows1251))
+        using (BinaryReader reader = new BinaryReader(file, Windows1252))
         {
           reader.BaseStream.Seek(offset, SeekOrigin.Begin);
 
