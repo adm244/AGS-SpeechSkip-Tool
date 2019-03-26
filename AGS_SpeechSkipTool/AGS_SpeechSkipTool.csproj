@@ -55,6 +55,8 @@
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Patcher\Asset.cs" />
+    <Compile Include="Patcher\PatcherEventData.cs" />
+    <Compile Include="Patcher\PatcherEventType.cs" />
     <Compile Include="Patcher\Signature.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

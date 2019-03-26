@@ -51,7 +51,12 @@ namespace AGS_SpeechSkipTool.Patcher
     private static readonly byte[] OpCodeReturn = new byte[] { 0xC3 };
 
     private static readonly int SpeechSkipOptionIndex = 7;
+    private static readonly int DTAVersionMin = 37; // 3.1
+    private static readonly int DTAVersionMax = 49; // 3.4.1 P2
+
     private static readonly Encoding Windows1252 = Encoding.GetEncoding(1252);
+
+    public event Func<PatcherEventType, PatcherEventData, bool> OnPatcherEvent = null;
 
     public bool Patch(string filepath, SpeechSkipType speechSkipType, bool makeBackup)
     {
@@ -61,7 +66,8 @@ namespace AGS_SpeechSkipTool.Patcher
         if (makeBackup && !CreateBackup(asset.Filepath))
           return false;
 
-        PatchSpeechSkipType(asset.Filepath, asset.Offset, speechSkipType);
+        if (!PatchSpeechSkipType(asset.Filepath, asset.Offset, speechSkipType))
+          return false;
       }
 
       IEnumerable<Asset> acFiles = BuildACAssetList(filepath);
@@ -233,7 +239,15 @@ namespace AGS_SpeechSkipTool.Patcher
 
           uint dtaVersion = reader.ReadUInt32();
           if (dtaVersion > 0xFF)
+          {
             return -1;
+          }
+          else if ((dtaVersion < DTAVersionMin) || (dtaVersion > DTAVersionMax))
+          {
+            bool result = OnPatcherEvent(PatcherEventType.UnsupportedDTA, new PatcherEventData(dtaVersion));
+            if (result == false)
+              return -1;
+          }
 
           string engineVersion = reader.ReadPrefixedString();
           string gameName = reader.ReadFixedString(50);

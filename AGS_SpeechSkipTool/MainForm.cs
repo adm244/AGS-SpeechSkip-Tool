@@ -33,12 +33,19 @@ namespace AGS_SpeechSkipTool
   public partial class MainForm : Form
   {
     private OpenFileDialog ofd = new OpenFileDialog();
-    private SpeechSkipPatcher patcher = new SpeechSkipPatcher();
+    private SpeechSkipPatcher patcher;
 
     public MainForm()
     {
       InitializeComponent();
       InitializeSpeechTypeSelector();
+      InitializePatcher();
+    }
+
+    private void InitializePatcher()
+    {
+      patcher = new SpeechSkipPatcher();
+      patcher.OnPatcherEvent += OnPatcherEvent;
     }
 
     private void InitializeSpeechTypeSelector()
@@ -48,6 +55,40 @@ namespace AGS_SpeechSkipTool
         cbSpeechSkipType.Items.Add(type);
       }
       cbSpeechSkipType.SelectedIndex = 0;
+    }
+
+    private DialogResult ShowError(string message, MessageBoxButtons buttons = MessageBoxButtons.OK)
+    {
+      return MessageBox.Show(this, message, "Error", buttons, MessageBoxIcon.Error);
+    }
+
+    private DialogResult ShowWarning(string message, MessageBoxButtons buttons = MessageBoxButtons.OK)
+    {
+      return MessageBox.Show(this, message, "Warning", buttons, MessageBoxIcon.Warning);
+    }
+
+    private DialogResult ShowMessage(string message, MessageBoxButtons buttons = MessageBoxButtons.OK)
+    {
+      return MessageBox.Show(this, message, "Information", buttons, MessageBoxIcon.Information);
+    }
+
+    private bool OnPatcherEvent(PatcherEventType eventType, PatcherEventData data)
+    {
+      switch (eventType)
+      {
+        case PatcherEventType.UnsupportedDTA:
+          {
+            string message = "Unsupported DTA file version detected: " + data.DTAVersion + Environment.NewLine
+              + Environment.NewLine
+              + "It is STRONGLY recommended to make backup files before proceeding." + Environment.NewLine
+              + Environment.NewLine
+              + "Continue patching?";
+            return ShowWarning(message, MessageBoxButtons.YesNo) == DialogResult.Yes;
+          }
+
+        default:
+          return true;
+      }
     }
 
     private void btnPatch_Click(object sender, EventArgs e)
@@ -60,19 +101,16 @@ namespace AGS_SpeechSkipTool
           if (cbMakeBackup.Checked)
             cbMakeBackup.Checked = false;
 
-          MessageBox.Show(this, "Game was successfully patched!",
-            "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+          ShowMessage("Game was successfully patched!");
         }
         else
         {
-          MessageBox.Show(this, "Could not patch game!",
-            "Failed to patch game", MessageBoxButtons.OK, MessageBoxIcon.Error);
+          ShowError("Could not patch game!");
         }
       }
       else
       {
-        MessageBox.Show(this, "Selected path does not exist!",
-          "File does not exist", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        ShowError("Selected path does not exist!");
       }
     }
 
@@ -90,7 +128,7 @@ namespace AGS_SpeechSkipTool
         }
         else
         {
-          MessageBox.Show(this, "Selected path does not exist!", "File does not exist.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+          ShowError("Selected path does not exist!");
         }
       }
     }
