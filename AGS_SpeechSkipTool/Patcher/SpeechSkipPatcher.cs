@@ -51,8 +51,8 @@ namespace AGS_SpeechSkipTool.Patcher
     private static readonly byte[] OpCodeReturn = new byte[] { 0xC3 };
 
     private static readonly int SpeechSkipOptionIndex = 7;
-    private static readonly int DTAVersionMin = 37; // 3.1
-    private static readonly int DTAVersionMax = 49; // 3.4.1 P2
+    private static readonly int DTAVersionMin = (int)AGSVersions.V310; // 3.1
+    private static readonly int DTAVersionMax = (int)AGSVersions.V341P2; // 3.4.1 P2
 
     private static readonly Encoding Windows1252 = Encoding.GetEncoding(1252);
 
@@ -258,6 +258,17 @@ namespace AGS_SpeechSkipTool.Patcher
           }
 
           string engineVersion = reader.ReadPrefixedString();
+
+          if (dtaVersion >= (int)AGSVersions.V341)
+          {
+            int capabilitiesCount = reader.ReadInt32();
+            for (int i = 0; i < capabilitiesCount; ++i)
+            {
+              //NOTE(adm244): skip strings
+              reader.ReadPrefixedString();
+            }
+          }
+
           string gameName = reader.ReadFixedString(50);
 
           //NOTE(adm244): skipping padding: sizeof(Int32) - (50 % sizeof(Int32))
