@@ -55,8 +55,6 @@ namespace AGS_SpeechSkipTool
     /// </summary>
     private void InitializeComponent()
     {
-      this.Icon = Resources.cup_icon;
-
       this.btnSelectGameFolder = new System.Windows.Forms.Button();
       this.cbSpeechSkipType = new System.Windows.Forms.ComboBox();
       this.lblGameFolder = new System.Windows.Forms.Label();
@@ -64,6 +62,7 @@ namespace AGS_SpeechSkipTool
       this.tbGameFolder = new System.Windows.Forms.TextBox();
       this.btnPatch = new System.Windows.Forms.Button();
       this.cbMakeBackup = new System.Windows.Forms.CheckBox();
+      this.cbPatchExternal = new System.Windows.Forms.CheckBox();
       this.SuspendLayout();
       // 
       // btnSelectGameFolder
@@ -114,9 +113,9 @@ namespace AGS_SpeechSkipTool
       // 
       // btnPatch
       // 
-      this.btnPatch.Location = new System.Drawing.Point(179, 116);
+      this.btnPatch.Location = new System.Drawing.Point(179, 127);
       this.btnPatch.Name = "btnPatch";
-      this.btnPatch.Size = new System.Drawing.Size(75, 23);
+      this.btnPatch.Size = new System.Drawing.Size(75, 26);
       this.btnPatch.TabIndex = 5;
       this.btnPatch.Text = "Patch";
       this.btnPatch.UseVisualStyleBackColor = true;
@@ -127,18 +126,31 @@ namespace AGS_SpeechSkipTool
       this.cbMakeBackup.AutoSize = true;
       this.cbMakeBackup.Checked = true;
       this.cbMakeBackup.CheckState = System.Windows.Forms.CheckState.Checked;
-      this.cbMakeBackup.Location = new System.Drawing.Point(15, 120);
+      this.cbMakeBackup.Location = new System.Drawing.Point(15, 131);
       this.cbMakeBackup.Name = "cbMakeBackup";
       this.cbMakeBackup.Size = new System.Drawing.Size(84, 17);
       this.cbMakeBackup.TabIndex = 7;
       this.cbMakeBackup.Text = "Backup files";
       this.cbMakeBackup.UseVisualStyleBackColor = true;
       // 
+      // cbPatchExternal
+      // 
+      this.cbPatchExternal.AutoSize = true;
+      this.cbPatchExternal.Checked = true;
+      this.cbPatchExternal.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.cbPatchExternal.Location = new System.Drawing.Point(15, 108);
+      this.cbPatchExternal.Name = "cbPatchExternal";
+      this.cbPatchExternal.Size = new System.Drawing.Size(115, 17);
+      this.cbPatchExternal.TabIndex = 8;
+      this.cbPatchExternal.Text = "Patch external files";
+      this.cbPatchExternal.UseVisualStyleBackColor = true;
+      // 
       // MainForm
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(266, 151);
+      this.ClientSize = new System.Drawing.Size(266, 163);
+      this.Controls.Add(this.cbPatchExternal);
       this.Controls.Add(this.cbMakeBackup);
       this.Controls.Add(this.btnPatch);
       this.Controls.Add(this.tbGameFolder);
@@ -147,6 +159,7 @@ namespace AGS_SpeechSkipTool
       this.Controls.Add(this.cbSpeechSkipType);
       this.Controls.Add(this.btnSelectGameFolder);
       this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+      this.Icon = global::AGS_SpeechSkipTool.Properties.Resources.cup_icon;
       this.MaximizeBox = false;
       this.Name = "MainForm";
       this.Text = "AGS SpeechSkipTool";
@@ -164,6 +177,7 @@ namespace AGS_SpeechSkipTool
     private System.Windows.Forms.TextBox tbGameFolder;
     private System.Windows.Forms.Button btnPatch;
     private System.Windows.Forms.CheckBox cbMakeBackup;
+    private System.Windows.Forms.CheckBox cbPatchExternal;
   }
 }
 

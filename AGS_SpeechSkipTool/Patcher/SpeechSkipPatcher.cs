@@ -68,9 +68,9 @@ namespace AGS_SpeechSkipTool.Patcher
       return OnPatcherEvent(type, data);
     }
 
-    public bool Patch(string filepath, SpeechSkipType speechSkipType, bool makeBackup)
+    public bool Patch(string filepath, SpeechSkipType speechSkipType, bool makeBackup, bool patchExternalFiles)
     {
-      IEnumerable<Asset> dtaFiles = BuildDTAAssetList(filepath);
+      IEnumerable<Asset> dtaFiles = BuildDTAAssetList(filepath, patchExternalFiles);
       foreach (Asset asset in dtaFiles)
       {
         if (makeBackup && !CreateBackup(asset.Filepath))
@@ -80,7 +80,7 @@ namespace AGS_SpeechSkipTool.Patcher
           return false;
       }
 
-      IEnumerable<Asset> acFiles = BuildACAssetList(filepath);
+      IEnumerable<Asset> acFiles = BuildACAssetList(filepath, patchExternalFiles);
       foreach (Asset asset in acFiles)
       {
         if (makeBackup && !CreateBackup(asset.Filepath))
@@ -196,18 +196,21 @@ namespace AGS_SpeechSkipTool.Patcher
       }
     }
 
-    private IEnumerable<Asset> BuildACAssetList(string gamePath)
+    private IEnumerable<Asset> BuildACAssetList(string gamePath, bool patchExternalFiles)
     {
       List<Asset> assets = new List<Asset>();
       assets.Add(new Asset(gamePath, 0, GetFileSize(gamePath)));
 
-      string gameFolder = Path.GetDirectoryName(gamePath);
-      foreach (string filepath in Directory.GetFiles(gameFolder))
+      if (patchExternalFiles)
       {
-        string filename = Path.GetFileName(filepath);
-        if (filename == ACV3Filename)
+        string gameFolder = Path.GetDirectoryName(gamePath);
+        foreach (string filepath in Directory.GetFiles(gameFolder))
         {
-          assets.Add(new Asset(filepath, 0, GetFileSize(filepath)));
+          string filename = Path.GetFileName(filepath);
+          if (filename == ACV3Filename)
+          {
+            assets.Add(new Asset(filepath, 0, GetFileSize(filepath)));
+          }
         }
       }
 
@@ -287,7 +290,7 @@ namespace AGS_SpeechSkipTool.Patcher
       }
     }
 
-    private IEnumerable<Asset> BuildDTAAssetList(string gamePath)
+    private IEnumerable<Asset> BuildDTAAssetList(string gamePath, bool patchExternalFiles)
     {
       List<Asset> assets = new List<Asset>();
 
@@ -296,13 +299,16 @@ namespace AGS_SpeechSkipTool.Patcher
       if (dtaInExe != null)
         assets.Add(dtaInExe);
 
-      string gameFolder = Path.GetDirectoryName(gamePath);
-      foreach (string filepath in Directory.GetFiles(gameFolder))
+      if (patchExternalFiles)
       {
-        string filename = Path.GetFileName(filepath);
-        if (filename == GameDataV3Filename)
+        string gameFolder = Path.GetDirectoryName(gamePath);
+        foreach (string filepath in Directory.GetFiles(gameFolder))
         {
-          assets.Add(new Asset(filepath, 0, GetFileSize(filepath)));
+          string filename = Path.GetFileName(filepath);
+          if (filename == GameDataV3Filename)
+          {
+            assets.Add(new Asset(filepath, 0, GetFileSize(filepath)));
+          }
         }
       }
 

@@ -95,7 +95,8 @@ namespace AGS_SpeechSkipTool
     {
       if (File.Exists(tbGameFolder.Text))
       {
-        bool result = patcher.Patch(tbGameFolder.Text, (SpeechSkipType)cbSpeechSkipType.SelectedItem, cbMakeBackup.Checked);
+        bool result = patcher.Patch(tbGameFolder.Text, (SpeechSkipType)cbSpeechSkipType.SelectedItem,
+          cbMakeBackup.Checked, cbPatchExternal.Checked);
         if (result)
         {
           if (cbMakeBackup.Checked)
