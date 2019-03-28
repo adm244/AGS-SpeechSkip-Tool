@@ -58,6 +58,8 @@ namespace AGS_SpeechSkipTool.Patcher
 
     public event Func<PatcherEventType, PatcherEventData, bool> OnPatcherEvent = null;
 
+    private long _CLIBOffset = -1;
+
     private Nullable<bool> RaisePatcherEvent(PatcherEventType type, PatcherEventData data)
     {
       if (OnPatcherEvent == null)
@@ -114,7 +116,7 @@ namespace AGS_SpeechSkipTool.Patcher
 
     private bool PatchSetSkipSpeechFunction(string filepath)
     {
-      long patchOffset = GetOffsetOf(filepath, SetSpeechSkipSignatures);
+      long patchOffset = GetOffsetOf(filepath, SetSpeechSkipSignatures, 0, _CLIBOffset);
       if (patchOffset < 0)
         return false;
 
@@ -138,28 +140,33 @@ namespace AGS_SpeechSkipTool.Patcher
       return true;
     }
 
-    private long GetOffsetOf(string filepath, Signature[] signatures)
+    private long GetOffsetOf(string filepath, Signature[] signatures, long offset = 0, long length = 0)
     {
-      long offset = -1;
+      long result = -1;
 
       for (int i = 0; i < signatures.Length; ++i)
       {
-        offset = GetOffsetOf(filepath, signatures[i]);
-        if (offset >= 0)
+        result = GetOffsetOf(filepath, signatures[i], offset, length);
+        if (result >= 0)
           break;
       }
 
-      return offset;
+      return result;
     }
 
-    private long GetOffsetOf(string filepath, Signature signature)
+    private long GetOffsetOf(string filepath, Signature signature, long offset = 0, long length = 0)
     {
       using (FileStream file = new FileStream(filepath, FileMode.Open, FileAccess.Read))
       {
         using (BinaryReader reader = new BinaryReader(file, Windows1252))
         {
-          reader.BaseStream.Seek(0, SeekOrigin.Begin);
-          byte[] buffer = reader.ReadBytes((int)reader.BaseStream.Length);
+          reader.BaseStream.Seek(offset, SeekOrigin.Begin);
+          
+          int bufferSize = (int)reader.BaseStream.Length;
+          if (length > 0)
+            bufferSize = (int)length;
+
+          byte[] buffer = reader.ReadBytes(bufferSize);
 
           long resultOffset = -1;
           for (int i = 0; i < (buffer.Length - signature.Pattern.Length); ++i)
@@ -284,8 +291,8 @@ namespace AGS_SpeechSkipTool.Patcher
     {
       List<Asset> assets = new List<Asset>();
 
-      long clibOffset = GetCLIBOffsetInExecutable(gamePath);
-      Asset dtaInExe = ExtractDTAAsset(gamePath, clibOffset);
+      _CLIBOffset = GetCLIBOffsetInExecutable(gamePath);
+      Asset dtaInExe = ExtractDTAAsset(gamePath, _CLIBOffset);
       if (dtaInExe != null)
         assets.Add(dtaInExe);
 
